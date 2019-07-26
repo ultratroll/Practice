@@ -23,7 +23,7 @@ int main()
 	//But the function is already a pointer, we could simply write
 	void (*pTest2) ();
 	pTest2 = Test;
-	pTest();
+	pTest2();
 
 	// With arguments. And we can init it right away
 	void (*pTestNum)(int) = TestNumber;
