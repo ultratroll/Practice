@@ -36,13 +36,13 @@ public:
 		_values[_position++] = value;
 		//_position++;
 
-		if (_position+1 > _size)
+		if (_position+1 >  _size)
 		{
 			_position= 0;
 		}
 	}
 
-	T& get(int index)
+	T &get(int index)
 	{
 		return _values[index];
 	} 
