@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "ring.h"
 
 // Using ring.h
@@ -11,8 +12,7 @@ int main()
 
 	it.print();
 
-	/*
-	ring<string> Textring;
+	ring<string> Textring(3);
 
 	Textring.add("one");
 	Textring.add("two");
@@ -21,9 +21,8 @@ int main()
 
 	for (int i= 0; i< Textring.size(); i++)
 	{
-		cout << Textring.get(i) << endl;
+		cout << i << " :" << Textring.get(i) << endl;
 	}
-	*/
 
 	return 0;
 }
