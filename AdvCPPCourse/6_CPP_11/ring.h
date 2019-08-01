@@ -50,6 +50,17 @@ public:
 	
 public:
 	class iterator;
+
+	iterator begin()
+	{
+		return iterator(0, *this);
+	}
+
+	iterator end()
+	{
+		return iterator(_size, *this);
+	}
+
 	// A nested class !
 	/*
 	class iterator
@@ -65,10 +76,37 @@ public:
 template<class T>
 class ring<T>::iterator
 {
+private:
+	int _position;
+	ring& _ring; // Reference to the ring
+
 public:
-	void print()
+
+	iterator(int position, ring &ring): _position(position), _ring(ring)
 	{
-		cout << "Iterator ! "<< T() << endl;
+	}
+
+	iterator& operator++()
+	{
+		_position++;
+		return *this;
+	}
+
+	// suffix version ?
+	iterator& operator++(int)
+	{
+		_position++;
+		return *this;
+	}
+
+	T& operator*()
+	{
+		return _ring.get(_position);
+	}
+	
+	bool operator!=(const iterator &other) const
+	{
+		return _position != other._position;
 	}
 };
 
