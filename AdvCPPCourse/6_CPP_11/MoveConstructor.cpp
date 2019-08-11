@@ -56,8 +56,22 @@ public:
 		delete[] _pBuffer; // Delete the buffer
 	}
 
+	// Moving operator, assignation for an r value
+	Test &operator=(Test &&Other)
+	{
+		std::cout << " moving assignment" << std::endl;
+
+		delete[] _pBuffer; // Delete the actual one (its assignment, there could be one already)
+		_pBuffer= Other._pBuffer;		
+		Other._pBuffer = nullptr; // We want to make sure that when rvalue other is destroyed it doesnt clean the buffer we just stealed
+
+		return *this;
+	}
+
 	Test &operator=(const Test &Other)
 	{
+		std::cout << " moving assignment" << std::endl;
+
 		_pBuffer = new int[SIZE]{}; // Allocate our buffer
 		memcpy(_pBuffer, Other._pBuffer, SIZE * sizeof(int) ); // Lets copy the buffer
 
@@ -79,9 +93,17 @@ Test GetTest()
 
 int main()
 {
+	std::cout << " --- moving assignment test" << std::endl;
+	// Now, a test for the move assign operator
+	// Test Test1 = GetTest(); // doesnt use any move constructor or assignment because of compiler optimizations
+	Test Test1;
+	Test1 = GetTest(); // moving assignment
+	Test1 = Test(); // moving assignment
+
+	std::cout << " --- moving construcctor test" << std::endl;
 	vector<Test> VectorTest;
 	VectorTest.push_back(Test()); 
-	// This will automatically use the move constructor since Test() si an rvalue (if there was no move constructor it would probably 
+	// This will automatically use the move constructor since Test() is an rvalue (if there was no move constructor it would probably 
 	//use the copy constructor as usual)
 
 	// move constructor is pretty efficient, it doesnt allocate more memory, it steals from the soon to die  rvalue
