@@ -26,13 +26,13 @@ public:
 class Temp
 {
 private:
-	unique_ptr<Test[]> TestPointer;
+	unique_ptr<Test[]> TestPointer; // Make sure to add the brackets if its an array like here
 
 	Test* TestOldPointer;
 
 public:
 
-	Temp(): TestPointer(new Test[3]), TestOldPointer(new Test[3])
+	Temp(): TestPointer(new Test[3]), TestOldPointer(new Test[3]) // Notice how both pointers are allocated in the same way
 	{}
 
 	~Temp()
