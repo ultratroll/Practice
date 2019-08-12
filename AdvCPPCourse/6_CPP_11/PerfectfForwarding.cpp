@@ -6,7 +6,8 @@ using namespace std;
 // at times references are collapsed, when the compiler infers the type with auto or templates, and what is an rvalue can be looked as an lvalue or viceversa
 // in those cases, forward allows us to have the references threated correctly as rvalue or lvalue
 // and using functions like check in this example is the surest way to differentitat those
-// 
+// https://stackoverflow.com/questions/13725747/concise-explanation-of-reference-collapsing-rules-requested-1-a-a-2
+
 
 class Test
 {
