@@ -39,8 +39,6 @@ public:
 		// Its literally stealing the buffer from the rvalue!
 		// Safe for mem leaks, remember we taken the other buffer for ourselves and nothing will happen when the other rvalue is destroyed
 		Other._pBuffer= nullptr;
-
-		memcpy(_pBuffer, Other._pBuffer, SIZE* sizeof(int));
 	}
 
 	Test(int i)
