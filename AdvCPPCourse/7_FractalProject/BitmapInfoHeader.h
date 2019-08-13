@@ -8,6 +8,9 @@ using namespace std;
 
 #pragma pack(2)
 
+namespace Fractal
+{
+
 struct FBitmapInfoHeader
 {
 	int32_t headerSize{40};
@@ -22,6 +25,8 @@ struct FBitmapInfoHeader
 	int32_t colors{0};
 	int32_t importantColors{0};
 };
+
+}
 
 #pragma pack(pop)
 

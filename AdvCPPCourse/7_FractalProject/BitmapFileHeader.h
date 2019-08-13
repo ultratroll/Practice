@@ -8,6 +8,9 @@ using namespace std;
 
 #pragma pack(2)
 
+namespace fractal
+{
+
 struct FBitmapFileHeader
 {
 	char Header[2]{'B','M'};
@@ -15,6 +18,8 @@ struct FBitmapFileHeader
 	int32_t reserved{0};
 	int32_t dataOffset;
 };
+
+}
 
 #pragma pack(pop)
 
