@@ -1,15 +1,29 @@
 #include <iostream>
-#include "BitmapFileHeader.h"
-#include "BitmapInfoHeader.h"
+#include <string>
+
 #include "Bitmap.h"
 
 using namespace std;
-using namespace fractal;
+using namespace bitmaps;
 
 int main()
 {
+	const int Width{600};
+	const int Height{800};
 
-	std::cout << "Bitmap time !" << std::endl;
+	Bitmap bit(Width, Height);
+
+	//for (int i= 0; i< Width; i++)
+	//	bit.SetPixel(Height/2, i, 255, 0, 0);
+
+	//for (int i= 0; i< Height; i++)
+	//	bit.SetPixel(i, Width/2, 0, 255, 0);
+
+	bit.SetPixel(Height/2, 100, 255, 255, 255);
+
+	bit.Write("FractalTest.bmp");
+
+	std::cout << "Finished !" << std::endl;
 
 	return 0;
 }

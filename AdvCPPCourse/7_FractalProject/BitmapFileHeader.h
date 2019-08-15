@@ -8,7 +8,7 @@ using namespace std;
 
 #pragma pack(2)
 
-namespace fractal
+namespace bitmaps
 {
 
 struct FBitmapFileHeader
