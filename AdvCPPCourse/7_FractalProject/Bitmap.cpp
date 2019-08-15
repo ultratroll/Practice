@@ -15,7 +15,7 @@ Bitmap::Bitmap()
 {
 }
 
-Bitmap::Bitmap(int Height, int Width) : _width(Width), _height(Height), _pPixelData( new uint8_t[Width*Height*3]{} )
+Bitmap::Bitmap(int Width, int Height) : _width(Width), _height(Height), _pPixelData( new uint8_t[Width*Height*3]{} )
 {
 	std::cout << "IT WAS I, BITMAP" << std::endl;
 }
@@ -58,6 +58,7 @@ void Bitmap::SetPixel(int X, int Y, uint8_t Red, uint8_t Green, uint8_t Blue)
 	uint8_t* pPixel= _pPixelData.get(); // getting raw pointer
 
 	pPixel+= Y*3*_width + X*3;
+
 	// backward order for colors because its little endian
 	pPixel[0]= Blue;
 	pPixel[1]= Green;

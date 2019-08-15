@@ -8,8 +8,8 @@ using namespace bitmaps;
 
 int main()
 {
-	const int Width{600};
-	const int Height{800};
+	const int Width{800};
+	const int Height{600};
 
 	Bitmap bit(Width, Height);
 
@@ -19,7 +19,7 @@ int main()
 	//for (int i= 0; i< Height; i++)
 	//	bit.SetPixel(i, Width/2, 0, 255, 0);
 
-	bit.SetPixel(Height/2, 100, 255, 255, 255);
+	bit.SetPixel(Width/2, 100, 255, 255, 255);
 
 	bit.Write("FractalTest.bmp");
 
