@@ -53,7 +53,7 @@ bool Bitmap::Write(string Filename)
 
 void Bitmap::SetPixel(int X, int Y, uint8_t Red, uint8_t Green, uint8_t Blue)
 {
-	std::cout << "Setting pixel" << std::endl;
+	//std::cout << "Setting pixel" << std::endl;
 
 	uint8_t* pPixel= _pPixelData.get(); // getting raw pointer
 
