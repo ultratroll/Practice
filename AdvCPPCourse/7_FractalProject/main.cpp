@@ -3,6 +3,7 @@
 
 #include "Bitmap.h"
 #include "Mandelbrot.h"
+#include <math.h>
 
 using namespace std;
 using namespace bitmaps;
@@ -70,7 +71,7 @@ int main()
 			So that's what we're doing here. We want to count pixels that we intend to colour, distribute colours nicely over those, and exclude those pixels that we intend 
 			to be black, which are the majority when you look at the Mandelbrot as a whole.
 			*/
-			if (Iterations!= Mandelbrot::MAXITERATIONS)
+			if (Iterations != Mandelbrot::MAXITERATIONS)
 				Histogram[Iterations]++;
 
 			// To reinforce it, another explanation
@@ -111,20 +112,26 @@ int main()
 		for (int x=0; x< Width; x++)
 		{
 			
-			int Iterations= Fractal[y*Width+x];
-
-			double Hue= 0.0;
-
-			// We add in hue the a proportion count of all pixels with lesser iterations
-			// in a way we add to the color in proportion to the number of pixel with lesser or equal number of iterations
-			for (int i=0; i <= Iterations; i++)
-				Hue+= ((double) Histogram[i])/Total;
-
 			uint8_t Red = 0;
-			uint8_t Green =  Hue * 255;
+			uint8_t Green =  0;
 			uint8_t Blue = 0;
 
-			bit.SetPixel(x,y, Red, Green, Blue);
+
+			int Iterations= Fractal[y*Width+x];
+
+			if (Iterations != Mandelbrot::MAXITERATIONS)
+			{
+				double Hue= 0.0;
+
+				// We add in hue the a proportion count of all pixels with lesser iterations
+				// in a way we add to the color in proportion to the number of pixel with lesser or equal number of iterations
+				for (int i=0; i <= Iterations; i++)
+					Hue+= ((double) Histogram[i])/Total;
+
+				Green = pow(255, Hue);
+
+				bit.SetPixel(x,y, Red, Green, Blue);
+			}
 
 			// old way, as my original fractal
 			/*
