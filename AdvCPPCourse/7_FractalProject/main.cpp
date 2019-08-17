@@ -94,37 +94,50 @@ int main()
 				use this column in the bitmap, as John explained. It contains points that probably will never "go out" and we want to draw a bitmap based on the distribution of
 				the number of iterations required to do that, abs()  value exceed 2.
 			*/
-
-			uint8_t Color= (uint8_t)(256* (double)Iterations/Mandelbrot::MAXITERATIONS);
-
-			Color= Color*Color*Color;
-
-			bit.SetPixel(x,y, 80, Color,0);
-
-			if (Color < min) min= Color;
-			if (Color > max) max= Color;
-
 		}
 	}
 
 	std::cout << std::endl;
 
-	int Count= 0;
-
+	int Total= 0;
 	for (int i=0; i< Mandelbrot::MAXITERATIONS ; i++)
 	{
 		std::cout << Histogram[i] << " " << std::flush; 
-		Count+= Histogram[i];
+		Total+= Histogram[i];
 	}
 
-	// Verifying the number of pixels is right
-	// Actual count will be lower than the number of total pixels, because we are excluding pixels where the number of iterations reached the maximum
-	std::cout << Count << " ; " << Width*Height << endl;
+	for (int y=0; y< Height; y++)
+	{
+		for (int x=0; x< Width; x++)
+		{
+			
+			int Iterations= Fractal[y*Width+x];
+
+			double Hue= 0.0;
+
+			// We add in hue the a proportion count of all pixels with lesser iterations
+			// in a way we add to the color in proportion to the number of pixel with lesser or equal number of iterations
+			for (int i=0; i <= Iterations; i++)
+				Hue+= ((double) Histogram[i])/Total;
+
+			uint8_t Red = 0;
+			uint8_t Green =  Hue * 255;
+			uint8_t Blue = 0;
+
+			bit.SetPixel(x,y, Red, Green, Blue);
+
+			// old way, as my original fractal
+			/*
+			uint8_t Color= (uint8_t) (256 * (double) Iterations / Mandelbrot::MAXITERATIONS);
+
+			Color= Color * Color *Color;
+
+			bit.SetPixel(x,y, 80, Color, 0);
+			*/
+		}
+	}	
 
 	std::cout << std::endl;
-
-	std::cout << "min " << min << std::endl;
-	std::cout << "max " << max << std::endl;
 
 	bit.Write("FractalTest.bmp");
 
