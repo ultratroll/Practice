@@ -17,7 +17,9 @@ int Mandelbrot::GetIterations(double X, double Y)
 	{
 		Z= Z*Z + C;
 
-		if (abs(Z) > 2)
+		//Optimization suggested: For anyone who finds that their code is slow, the abs function probably includes a square root, or some approximation, so coding up
+		// the quit condition as norm(z) > 4.0 instead of abs(z) > 2.0 will speed up the code dramatically.
+		if (norm(Z) > 4.0)
 		{
 			break;
 		}
