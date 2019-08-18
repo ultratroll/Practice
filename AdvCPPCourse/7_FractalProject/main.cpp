@@ -3,6 +3,7 @@
 
 #include "Bitmap.h"
 #include "Mandelbrot.h"
+#include "ZoomList.h"
 #include <math.h>
 
 using namespace std;
@@ -20,35 +21,38 @@ int main()
 	//	bit.SetPixel(Height/2, i, 255, 0, 0);
 
 	//for (int i= 0; i< Height; i++)
-	//	bit.SetPixel(i, Width/2, 0, 255, 0);
+	//	bit.SetPixel(Width/2, i, 255, 0, 0);
 
-	bit.SetPixel(Width/2, 100, 255, 255, 255);
+	//bit.SetPixel(Width/2, 100, 255, 255, 255);
 
 	double min = 999999;
 	double max = -999999;
 
+	ZoomList Zooms(Width, Height);
+	Zooms.AddZoom(FZoom(Width/2, Height/2, 2.0/Width)); // 4.0/Width is a nice zoom to see the fractal
+
 	// This histogram is for saving the number of pixels per iteration. Not counting the pixels where we reach the max number of iterations, because those
 	// are not useful data for the fractal, on the pixels the algorithm "gave up"
-	unique_ptr<int []> Histogram(new int[Mandelbrot::MAXITERATIONS]{0});
+	unique_ptr<int []> Histogram(new int[Mandelbrot::MAXITERATIONS]);
 
 	// the actual fractal, lets save the number of iterations for each pixel
 	unique_ptr<int []> Fractal(new int[Width * Height]); // For some reason cl complains when initializing to zeroes this enourmous array, so wont
+
+	fill(Histogram.get(), Histogram.get()+Mandelbrot::MAXITERATIONS,0);
+	fill(Fractal.get(), Fractal.get()+Width*Height,0);
 
 	for (int y=0; y< Height; y++)
 	{
 		for (int x=0; x< Width; x++)
 		{
-			const double Offset = -200.0;
-			const double Scale = 1;
-
 			// mapping ot value bettwen -1 and 1
-			double xFractal = (x-Width/2 +Offset) * 2.0/Height;
-			double yFractal = (y-Height/2) * 2.0/Height;
+			//double xFractal = (x-Width/2 -200) * 2.0/Height;
+			//double yFractal = (y-Height/2) * 2.0/Height;
 
-			xFractal*= Scale;
-			yFractal*= Scale;
+			// Now we do it with the zoom algorithm
+			pair<double, double> Coordinates = Zooms.DoZoom(x,y);
 
-			int Iterations= Mandelbrot::GetIterations(xFractal, yFractal);
+			int Iterations= Mandelbrot::GetIterations(Coordinates.first, Coordinates.second);
 
 			Fractal[y* Width+ x] = Iterations;
 			
@@ -103,7 +107,6 @@ int main()
 	int Total= 0;
 	for (int i=0; i< Mandelbrot::MAXITERATIONS ; i++)
 	{
-		std::cout << Histogram[i] << " " << std::flush; 
 		Total+= Histogram[i];
 	}
 
