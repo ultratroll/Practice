@@ -1,7 +1,4 @@
 #include "ZoomList.h"
-#include <iostream>
-
-using namespace std;
 
 namespace fractals
 {
@@ -15,12 +12,10 @@ void ZoomList::AddZoom(const FZoom& Zoom)
 
 	// From where the user clicks we want to have the new center by substracting, and then apply the fractal scale
 	CenterX+= (Zoom.X-Width/2)*Scale;
-	CenterX+= (Zoom.Y-Height/2)*Scale;
+	CenterY+= (Zoom.Y-Height/2)*Scale;
 
 	// Update the scale
 	Scale*= Zoom.Scale;
-
-	std::cout << "(" << CenterX << ", " << CenterY << ", " <<  Scale << ")" << std::endl;
 }
 
 pair<double, double> ZoomList::DoZoom(int X, int Y)

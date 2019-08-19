@@ -9,6 +9,11 @@ using namespace std;
 namespace bitmaps
 {
 
+/*
+	Bitmap class
+	Allows to create a bitmap file data representation, modify it and then and then write it to file.
+	Useful for quick visual experiments.
+*/
 class Bitmap
 {
 private:
