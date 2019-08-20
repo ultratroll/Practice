@@ -18,6 +18,13 @@ FractalCreator::FractalCreator(int Width, int Height) :
 FractalCreator::~FractalCreator()
 {}
 
+void FractalCreator::Run(string Name)
+{
+	CalculateIterations();
+	DrawFractal();
+	WriteBitmap(Name);
+}
+
 void FractalCreator::CalculateIterations()
 {
 	for (int y=0; y< _height; y++)
@@ -46,14 +53,17 @@ void FractalCreator::DrawFractal()
 		totalPixels+= _histogram[i];
 	}
 
+	FRGB startColor(80,0,0);
+	FRGB endColor(0,20,255);
+	FRGB diffColor = endColor - startColor; 
+
 	for (int y=0; y< _height; y++)
 	{
 		for (int x=0; x< _width; x++)
 		{
-			
-			uint8_t Red = 0;
-			uint8_t Green =  0;
-			uint8_t Blue = 0;
+			uint8_t red = 0;
+			uint8_t green =  0;
+			uint8_t blue = 0;
 
 			int Iterations= _fractalData[y*_width+x];
 
@@ -67,10 +77,12 @@ void FractalCreator::DrawFractal()
 				for (int i=0; i <= Iterations; i++)
 					Hue+= ((double) _histogram[i])/totalPixels;
 
-				//Green = pow(255, Hue); // Roxana likes this one more :)
-				Red = 255* Hue; // This one looks a lot more glowy
 
-				_bitmap.SetPixel(x,y, Red, Green, Blue);
+				red = startColor.R + diffColor.R* Hue;
+				green = startColor.G + diffColor.G* Hue;
+				blue = startColor.B + diffColor.B* Hue;
+
+				_bitmap.SetPixel(x,y, red, green, blue);
 			}
 		}
 	}	
@@ -81,9 +93,9 @@ void FractalCreator::AddZoom(const FZoom& Zoom)
 	_zoomList.AddZoom(Zoom);
 }
 
-void FractalCreator::WriteBitmap(string name)
+void FractalCreator::WriteBitmap(string Name)
 {
-	_bitmap.Write(name);
+	_bitmap.Write(Name);
 
 	std::cout << "Finished !" << std::endl;
 }

@@ -1,5 +1,4 @@
 #include "FractalCreator.h"
-
 using namespace std;
 using namespace bitmaps;
 using namespace fractals;
@@ -16,9 +15,7 @@ int main()
 	fractalMaker.AddZoom(FZoom(312, _height-304, 0.1));
 	fractalMaker.AddZoom(FZoom(181, _height-289, 0.1));
 
-	fractalMaker.CalculateIterations();
-	fractalMaker.DrawFractal();
-	fractalMaker.WriteBitmap("Fractal2.bmp");
+	fractalMaker.Run("fractal3.bmp");
 
 	return 0;
 }

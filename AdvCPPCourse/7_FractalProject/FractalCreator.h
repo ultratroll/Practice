@@ -2,6 +2,7 @@
 #define FRACTALCREATOR_H
 
 #include "Bitmap.h"
+#include "RGB.h"
 #include "Mandelbrot.h"
 #include <math.h>
 #include "ZoomList.h"
@@ -34,11 +35,13 @@ public:
 
 	FractalCreator(const int Width, const int Height);
 	~FractalCreator();
+	void FractalCreator::Run(string Name);
+	void AddZoom(const FZoom& Zoom);
+
+private:
 	void CalculateIterations();
 	void DrawFractal();
-	void AddZoom(const FZoom& Zoom);
 	void WriteBitmap(string name);
-
 };
 
 }
