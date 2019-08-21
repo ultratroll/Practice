@@ -1,4 +1,5 @@
 #include "FractalCreator.h"
+#include <vector>
 
 namespace fractals
 {
@@ -21,6 +22,7 @@ FractalCreator::~FractalCreator()
 void FractalCreator::Run(string Name)
 {
 	CalculateIterations();
+	CalculateRangePixelTotals();
 	DrawFractal();
 	WriteBitmap(Name);
 }
@@ -47,14 +49,16 @@ void FractalCreator::CalculateIterations()
 void FractalCreator::DrawFractal()
 {
 	// Lets count the total of pixels by adding all the pixel count per iteration in the histogram
-	int totalPixels= 0;
+	int _totalPixels= 0;
 	for (int i=0; i< Mandelbrot::MAXITERATIONS ; i++)
 	{
-		totalPixels+= _histogram[i];
+		_totalPixels+= _histogram[i];
 	}
 
-	FRGB startColor(80,0,0);
-	FRGB endColor(0,20,255);
+	std::cout<< "total pixels " << _totalPixels << std::endl;
+
+	FRGB startColor(0,0,0);
+	FRGB endColor(0,0,255);
 	FRGB diffColor = endColor - startColor; 
 
 	for (int y=0; y< _height; y++)
@@ -75,7 +79,7 @@ void FractalCreator::DrawFractal()
 				// in a way we add to the color in proportion to the number of pixel with lesser or equal number of iterations
 				// The more pixels in that and lesser iterations, the brither the color
 				for (int i=0; i <= Iterations; i++)
-					Hue+= ((double) _histogram[i])/totalPixels;
+					Hue+= ((double) _histogram[i])/_totalPixels;
 
 
 				red = startColor.R + diffColor.R* Hue;
@@ -92,6 +96,50 @@ void FractalCreator::AddZoom(const FZoom& Zoom)
 {
 	_zoomList.AddZoom(Zoom);
 }
+
+void FractalCreator::AddRange(double EndRange, FRGB& Endcolor)
+{
+	//Lets handle our ranges vector by iterations, thus, the rational multiplied by the max number of iterations
+	// ranges will be indexed by number of iterations
+	_ranges.push_back(EndRange * Mandelbrot::MAXITERATIONS);
+	_colors.push_back(Endcolor);
+
+	// Doing this with all but the first range added
+	if (_bGotFirstRange)
+	{
+		_rangesTotalPixels.push_back(0);
+	}
+
+	// flag to enssure we cannow add pixels now, because we dont count the first range (for 4 ranges we actually have 3 ranges)
+	_bGotFirstRange= true;
+}
+
+void FractalCreator::CalculateRangePixelTotals()
+{
+	int rangeIndex = 0;
+
+	for (int i= 0; i< Mandelbrot::MAXITERATIONS; i++)
+	{
+		const int pixels= _histogram[i];
+
+		// Check if we need to advance the range index
+		// rangeIndex+1 because the first value doesnt count
+		if (_ranges[rangeIndex+1] <= i)
+		{
+			rangeIndex++;
+		}
+
+		_rangesTotalPixels[rangeIndex]+= pixels;
+	}
+
+	// For debug
+	for (int value : _rangesTotalPixels)
+		std::cout << "Total pixels "<< value << std::endl;
+
+		for (int value : _ranges)
+		std::cout << "Range "<< value << std::endl;
+}
+
 
 void FractalCreator::WriteBitmap(string Name)
 {
