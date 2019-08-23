@@ -7,7 +7,7 @@ namespace fractals
 class Mandelbrot
 {
 public:
-	static const int MAXITERATIONS = 1000;
+	static const int MAXITERATIONS = 500; // 1000
 public:
 	static int GetIterations(double X, double Y);
 };

@@ -58,30 +58,38 @@ void FractalCreator::DrawFractal()
 
 	std::cout<< "total pixels " << _totalPixels << std::endl;
 
-	FRGB startColor(0,0,0);
-	FRGB endColor(0,0,255);
-	FRGB diffColor = endColor - startColor; 
 
 	for (int y=0; y< _height; y++)
 	{
 		for (int x=0; x< _width; x++)
 		{
+			int Iterations= _fractalData[y*_width+x];
+			int range= GetRange(Iterations);
+			int allPixelsInRange = _rangesTotalPixels[range]; //  how many pixels are in this range
+			int startingIterationsInRange = _ranges[range]; // with how many iteration  does this range start
+
 			uint8_t red = 0;
 			uint8_t green =  0;
 			uint8_t blue = 0;
 
-			int Iterations= _fractalData[y*_width+x];
+			FRGB& startColor= _colors[range];
+			FRGB& endColor= _colors[range+1];
+			FRGB  diffColor = endColor - startColor; 
 
 			if (Iterations != Mandelbrot::MAXITERATIONS)
 			{
 				double Hue= 0.0;
+				int totalPixels = 0; // To sume the pixels bettwen the start of the range and the actual number of iterations in this pixel
 
-				// We add in hue the a proportion count of all pixels with lesser iterations
-				// in a way we add to the color in proportion to the number of pixel with lesser or equal number of iterations
-				// The more pixels in that and lesser iterations, the brither the color
-				for (int i=0; i <= Iterations; i++)
-					Hue+= ((double) _histogram[i])/_totalPixels;
+				// Lets count all pixels from the start of the iterations for the range until the actual number of iterations
+				for (int i=startingIterationsInRange; i <= Iterations; i++)
+				{
+					totalPixels+= _histogram[i];
+					//Hue+= ((double) _histogram[i])/_totalPixels;
 
+				}
+
+				Hue= (double)totalPixels/allPixelsInRange;
 
 				red = startColor.R + diffColor.R* Hue;
 				green = startColor.G + diffColor.G* Hue;
