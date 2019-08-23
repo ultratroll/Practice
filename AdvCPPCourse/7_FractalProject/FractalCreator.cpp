@@ -1,5 +1,6 @@
 #include "FractalCreator.h"
 #include <vector>
+#include <assert.h>
 
 namespace fractals
 {
@@ -146,6 +147,22 @@ void FractalCreator::WriteBitmap(string Name)
 	_bitmap.Write(Name);
 
 	std::cout << "Finished !" << std::endl;
+}
+
+int FractalCreator::GetRange(int Iterations) const
+{
+	int range= 0;
+
+	for (int i= 1; i < _ranges.size(); i++)
+	{
+		if (Iterations < _ranges[i])
+			break;
+		range++;
+	}
+
+	assert(range>=0 && range < _ranges.size());
+
+	return range;
 }
 
 }

@@ -20,6 +20,8 @@ int main()
 	fractalMaker.AddZoom(FZoom(312, _height-304, 0.1));
 	//fractalMaker.AddZoom(FZoom(181, _height-289, 0.1));
 
+	std::cout << fractalMaker.GetRange(300) << std::endl;
+
 	fractalMaker.Run("fractal3.bmp");
 
 	return 0;

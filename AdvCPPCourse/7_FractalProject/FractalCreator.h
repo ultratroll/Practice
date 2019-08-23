@@ -59,10 +59,15 @@ public:
 	// Calculate how many pixels per pixel range are being saved.
 	void CalculateRangePixelTotals();
 
+	// Gets the range based on the number of iterations
+	int GetRange(int Iterations) const;
+
 private:
 	void CalculateIterations();
 	void DrawFractal();
 	void WriteBitmap(string name);
+	
+	
 };
 
 }
