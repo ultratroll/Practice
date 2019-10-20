@@ -1,0 +1,82 @@
+#define OLC_PGE_APPLICATION
+#include "olcPixelGameEngine.h"
+
+class Isometric : public olc::PixelGameEngine
+{
+
+private:
+
+	olc::vi2d vWorldSize = {14,10}; // Tiles in the world
+	olc::vi2d vTileSize = {40,20}; // Size of a tile in pixels. notice how the width is twice the height, important convention
+	olc::vi2d vOrigin = {5,1}; // Where to start drawing
+	olc::Sprite *spriteIsom = nullptr; // For the sprite
+	int *pWorld = nullptr; // Int array to store the 2d world array
+
+public:
+	Isometric()
+	{
+		sAppName = "Example";
+	}
+
+	bool OnUserCreate() override
+	{
+		spriteIsom = new olc::Sprite("isometric_demo.png");
+		pWorld = new int[vWorldSize.x *vWorldSize.y] {0}; // Init the 2d only world array with zeroes
+		return true;
+	}
+
+	bool OnUserUpdate(float fElapsedTime) override
+	{
+		// called once per frame
+		Clear(olc::WHITE);
+
+		auto ToScreen = [&](int x, int y)
+		{
+			// Trough drawing and factorizing these simple formuals arise. Assuming that weidth of tile is twice its height
+			//float transformedX= (x-y)*(vTileSize.x/2);
+			//float transformedY= (x+y)*(vTileSize.y/2);
+
+			return olc::vi2d{ (x-y)*(vTileSize.x/2) + vOrigin.x*(vTileSize.x), (x+y)*(vTileSize.y/2)+ vOrigin.y*(vTileSize.y)};
+
+		};
+
+		SetPixelMode(olc::Pixel::MASK);
+
+		// First Y from the top of the screen to the bottom, because we want to draw first the items above and finally the remaining ones
+		for (int j= 0; j < vWorldSize.y; j++)
+		{
+			for (int i= 0; i < vWorldSize.x; i++)
+			{
+				// Starting point to draw this sprite
+				olc::vi2d vWorld = ToScreen(i, j);
+
+				// Tile to draw
+				switch (pWorld[j*vWorldSize.x + i])
+				{
+					case 0:
+						// Invisible tile
+						DrawPartialSprite(vWorld.x, vWorld.y, spriteIsom, 1 * vTileSize.x, 0, vTileSize.x, vTileSize.y);
+						break;
+					
+					default:
+						break;
+				}
+			}
+		}
+
+		SetPixelMode(olc::Pixel::NORMAL);
+
+		return true;
+	}
+
+};
+
+
+int main()
+{
+	Isometric demo;
+	if (demo.Construct(512, 480, 2, 2))
+		demo.Start();
+
+	return 0;
+}
