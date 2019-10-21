@@ -8,7 +8,7 @@ private:
 
 	olc::vi2d vWorldSize = {14,10}; // Tiles in the world
 	olc::vi2d vTileSize = {40,20}; // Size of a tile in pixels. notice how the width is twice the height, important convention
-	olc::vi2d vOrigin = {5,1}; // Where to start drawing
+	olc::vi2d vOrigin = {5,5}; // Where to start drawing
 	olc::Sprite *spriteIsom = nullptr; // For the sprite
 	int *pWorld = nullptr; // Int array to store the 2d world array
 
@@ -27,16 +27,29 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
+
+		// Mouse and cell where mouse lies
+		olc::vi2d vMouse = { GetMouseX(), GetMouseY() }; // Mouse in world
+		olc::vi2d vCell = { vMouse.x /vTileSize.x, vMouse.y / vTileSize.y  }; // Active cell
+		olc::vi2d vOffset = { vMouse.x % vTileSize.x, vMouse.y % vTileSize.y  }; // Mouse offset into cell
+
+		olc::vi2d vSelectedCell =
+		{
+			(vCell.y- vOrigin.y) + (vCell.x- vOrigin.x),
+			(vCell.y- vOrigin.y) - (vCell.x- vOrigin.x)
+		};
+
 		// called once per frame
 		Clear(olc::WHITE);
 
 		auto ToScreen = [&](int x, int y)
 		{
 			// Trough drawing and factorizing these simple formuals arise. Assuming that weidth of tile is twice its height
-			//float transformedX= (x-y)*(vTileSize.x/2);
-			//float transformedY= (x+y)*(vTileSize.y/2);
-
-			return olc::vi2d{ (x-y)*(vTileSize.x/2) + vOrigin.x*(vTileSize.x), (x+y)*(vTileSize.y/2)+ vOrigin.y*(vTileSize.y)};
+			return olc::vi2d
+			{ 
+				(x-y)*(vTileSize.x/2) + vOrigin.x*(vTileSize.x), 
+				(x+y)*(vTileSize.y/2) + vOrigin.y*(vTileSize.y)
+			};
 
 		};
 
@@ -64,7 +77,20 @@ public:
 			}
 		}
 
+		// Selection sprite
+		SetPixelMode(olc::Pixel::ALPHA);
+		olc::vi2d vSelectdWorld = ToScreen(vSelectedCell.x, vSelectedCell.y);
+
+		DrawPartialSprite(vSelectdWorld.x, vSelectdWorld.y, spriteIsom, 0 * vTileSize.x, 0, vTileSize.x, vTileSize.y);
+		
 		SetPixelMode(olc::Pixel::NORMAL);
+
+		//DrawRect(vCell.x * vTileSize.x, vCell.y * vTileSize.y, vTileSize.x, vTileSize.y, olc::RED);
+
+		// Draw Debug Info
+		DrawString(4, 4, "Mouse   : " + std::to_string(vMouse.x) + ", " + std::to_string(vMouse.y), olc::BLACK);
+		DrawString(4, 14, "Cell    : " + std::to_string(vCell.x) + ", " + std::to_string(vCell.y), olc::BLACK);
+		DrawString(4, 24, "Selected: " + std::to_string(vSelectedCell.x) + ", " + std::to_string(vSelectedCell.y), olc::BLACK);
 
 		return true;
 	}
