@@ -39,6 +39,15 @@ public:
 			(vCell.y- vOrigin.y) - (vCell.x- vOrigin.x)
 		};
 
+		// Sample into cell offset colour...the trick is checking the color and the region witht he offset to know which cell is actually being selected, clever cheat
+		olc::Pixel col = spriteIsom->GetPixel(3 * vTileSize.x + vOffset.x, vOffset.y);
+
+		// "Bodge" selected cell by sampling corners
+		if (col == olc::RED) vSelectedCell += {-1, +0};
+		if (col == olc::BLUE) vSelectedCell += {+0, -1};
+		if (col == olc::GREEN) vSelectedCell += {+0, +1};
+		if (col == olc::YELLOW) vSelectedCell += {+1, +0};
+
 		// called once per frame
 		Clear(olc::WHITE);
 
