@@ -48,6 +48,15 @@ public:
 		if (col == olc::GREEN) vSelectedCell += {+0, +1};
 		if (col == olc::YELLOW) vSelectedCell += {+1, +0};
 
+		// Input with mouse!
+		// Handle mouse click to toggle if a tile is visible or not
+		if (GetMouse(0).bPressed)
+		{
+			// Guard array boundary
+			if (vSelectedCell.x >= 0 && vSelectedCell.x < vWorldSize.x && vSelectedCell.y >= 0 && vSelectedCell.y < vWorldSize.y)
+				++pWorld[vSelectedCell.y * vWorldSize.x + vSelectedCell.x] %= 6;
+		}
+
 		// called once per frame
 		Clear(olc::WHITE);
 
@@ -76,11 +85,28 @@ public:
 				switch (pWorld[j*vWorldSize.x + i])
 				{
 					case 0:
-						// Invisible tile
+						// Invisble Tile
 						DrawPartialSprite(vWorld.x, vWorld.y, spriteIsom, 1 * vTileSize.x, 0, vTileSize.x, vTileSize.y);
 						break;
-					
-					default:
+					case 1:
+						// Visible Tile
+						DrawPartialSprite(vWorld.x, vWorld.y, spriteIsom, 2 * vTileSize.x, 0, vTileSize.x, vTileSize.y);
+						break;
+					case 2:
+						// Tree
+						DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, spriteIsom, 0 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
+						break;
+					case 3:
+						// Spooky Tree
+						DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, spriteIsom, 1 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
+						break;
+					case 4:
+						// Beach
+						DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, spriteIsom, 2 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
+						break;
+					case 5:
+						// Water
+						DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, spriteIsom, 3 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
 						break;
 				}
 			}
