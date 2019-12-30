@@ -6,7 +6,7 @@ class ConsoleTest : public olc::PixelGameEngine
 public:
 	ConsoleTest()
 	{
-		sAppName = "Example";
+		sAppName = "Test";
 	}
 
 public:
